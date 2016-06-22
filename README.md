@@ -38,7 +38,7 @@ Usage: godaemonize [OPTIONS] -x file [ARGV]...
 ## Quickstart
 
 
-```godaemonize -p /tmp/some.pid -u nobody -E "key1=value1,key2=value2" -e /tmp/godaemonize_err.log -o /tmp/godaemonize_out.log -x /tmp/some.sh -c config.toml```
+```godaemonize -p /tmp/some.pid -u nobody -E "key1=value1,key2=value2" -e /tmp/some_err.log -o /tmp/some_out.log -x /tmp/some.sh -c config.toml```
 
 
 
