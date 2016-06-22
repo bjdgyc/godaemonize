@@ -2,7 +2,7 @@
 
 ## Introduction
 
-daemonize is a command-line utility that runs a command as a Unix daemon.
+godaemonize is a command-line utility that runs a command as a Unix daemon.
 
 The godaemonize is most like [daemonize](https://github.com/bmc/daemonize)
 
