@@ -1,4 +1,4 @@
-#godaemonize
+#godaemonize [![Build Status](https://travis-ci.org/bjdgyc/godaemonize.svg?branch=master)](https://travis-ci.org/bjdgyc/godaemonize)
 
 ## Introduction
 
