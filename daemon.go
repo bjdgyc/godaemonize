@@ -11,16 +11,21 @@ import (
 )
 
 func daemon() {
+
+	syscall.Umask(0)
+
 	//设置标准输入输出
-	files := make([]*os.File, 3)
-	files[0] = os.Stdin
-	files[1] = os.Stdout
+	files := make([]uintptr, 3)
+	files[0] = os.Stdin.Fd()
+	files[1] = os.Stdout.Fd()
 	if *stdout != "" {
-		files[1], _ = os.OpenFile(*stderr, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0660)
+		f, _ := os.OpenFile(*stderr, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0660)
+		files[1] = f.Fd()
 	}
-	files[2] = os.Stderr
+	files[2] = os.Stderr.Fd()
 	if *stderr != "" {
-		files[2], _ = os.OpenFile(*stdout, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0660)
+		f, _ := os.OpenFile(*stdout, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0660)
+		files[2] = f.Fd()
 	}
 
 	//设置工作目录
@@ -63,22 +68,22 @@ func daemon() {
 		Credential: credential,
 	}
 
-	attrs := os.ProcAttr{
+	attrs := syscall.ProcAttr{
 		Dir:   dir,
 		Env:   envs,
-		Files: files, Sys: &sysattrs,
+		Files: files,
+		Sys:   &sysattrs,
 	}
 
 	//最后一次fork
-	proc, err := os.StartProcess(*exec, os.Args[inx-1:], &attrs)
+	pid, err := syscall.ForkExec(*exec, os.Args[inx-1:], &attrs)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "can't create process %s", err)
 		os.Exit(2)
 	}
-	proc.Release()
-
+	//fmt.Println(pid)
 	if *pidfile != "" {
-		err := ioutil.WriteFile(*pidfile, []byte(strconv.Itoa(proc.Pid)), 0660)
+		err := ioutil.WriteFile(*pidfile, []byte(strconv.Itoa(pid)), 0660)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "can't write pidfile %s: %s", *pidfile, err)
 			os.Exit(2)

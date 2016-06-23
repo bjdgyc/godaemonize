@@ -7,7 +7,7 @@ echo $2
 echo $$
 echo $aa
 echo $cc
-sleep 20
+sleep 50
 echo "bbb"
 
 

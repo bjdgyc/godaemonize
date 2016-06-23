@@ -52,10 +52,10 @@ func main() {
 
 	usage()
 
-	files := make([]*os.File, 3)
-	files[0] = os.Stdin
-	files[1] = os.Stdout
-	files[2] = os.Stderr
+	files := make([]uintptr, 3)
+	files[0] = os.Stdin.Fd()
+	files[1] = os.Stdout.Fd()
+	files[2] = os.Stderr.Fd()
 
 	if syscall.Getppid() == 1 {
 		daemon()
@@ -64,14 +64,13 @@ func main() {
 	}
 
 	//fork 新的进程
-	attrs := os.ProcAttr{Files: files}
-	proc, err := os.StartProcess(os.Args[0], os.Args, &attrs)
+	attrs := syscall.ProcAttr{Files: files}
+	_, err := syscall.ForkExec(os.Args[0], os.Args, &attrs)
 
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "can't create master process %s", err)
 		os.Exit(2)
 	}
 
-	proc.Release()
 	os.Exit(0)
 }
