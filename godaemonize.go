@@ -9,7 +9,9 @@ import (
 )
 
 var (
-	inx         int
+	inx  int
+	exec string // The exec file and paramter. Must use absolute path
+
 	flagSet     = flag.NewFlagSet("godaemonize", flag.ExitOnError)
 	wdir        = flagSet.String("d", "", "Set daemon's working directory to <dir>")
 	stderr      = flagSet.String("e", "", "Send daemon's stderr to file, default is <stderr>")
@@ -17,13 +19,13 @@ var (
 	pidfile     = flagSet.String("p", "", "Save PID to <pidfile>")
 	guser       = flagSet.String("u", "", "Run daemon as user <user>. Requires invocation as root")
 	environment = flagSet.String("E", "", "Pass environment setting to daemon. like [a=b,c=d]")
-	exec        = flagSet.String("x", "", "The exec file and paramter. Must use absolute path")
 )
 
 func usage() {
 	flagSet.Usage = func() {
-		fmt.Fprintf(os.Stderr, "godaemonize, version %s\n", godaemonize_version)
-		fmt.Fprintln(os.Stderr, "Usage: godaemonize [OPTIONS] -x file [ARGV]...\n")
+		fmt.Fprintf(os.Stderr, "godaemonize, version %s\n", GODAEMONIZE_VERSION)
+		fmt.Fprintln(os.Stderr, "Usage: godaemonize [OPTIONS] -x file [ARGV] ...\n")
+		fmt.Fprintln(os.Stderr, "OPTIONS\n")
 		flagSet.PrintDefaults()
 	}
 
@@ -31,16 +33,19 @@ func usage() {
 	inx = len(os.Args)
 	var haveX bool
 	for i, a := range os.Args {
-		if a == "-x" {
-			inx = i + 2
-			haveX = true
+		if haveX == true {
+			exec = a
 			break
+		}
+		if a == "-x" {
+			inx = i
+			haveX = true
 		}
 	}
 
 	flagSet.Parse(os.Args[1:inx])
 
-	if len(os.Args) < 2 || !haveX {
+	if len(os.Args) < 2 || exec == "" {
 		flagSet.Usage()
 		os.Exit(2)
 	}

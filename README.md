@@ -15,8 +15,10 @@ The bin file will install in `GOPATH` src/bin dir.
 ## Usage
 
 ```
-godaemonize, version 0.0.1
-Usage: godaemonize [OPTIONS] -x file [ARGV]...
+godaemonize, version 0.1.1
+Usage: godaemonize [OPTIONS] -x file [ARGV] ...
+
+OPTIONS
 
   -E string
     	Pass environment setting to daemon. like [a=b,c=d]
@@ -30,8 +32,6 @@ Usage: godaemonize [OPTIONS] -x file [ARGV]...
     	Save PID to <pidfile>
   -u string
     	Run daemon as user <user>. Requires invocation as root
-  -x string
-    	The exec file and paramter. Must use absolute path
 ```
 
 

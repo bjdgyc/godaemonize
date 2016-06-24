@@ -76,7 +76,7 @@ func daemon() {
 	}
 
 	//最后一次fork
-	pid, err := syscall.ForkExec(*exec, os.Args[inx-1:], &attrs)
+	pid, err := syscall.ForkExec(exec, os.Args[inx+1:], &attrs)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "can't create process %s", err)
 		os.Exit(2)

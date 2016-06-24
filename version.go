@@ -1,3 +1,4 @@
 package main
 
-const godaemonize_version = "0.0.1"
+const GODAEMONIZE_VERSION = "0.1.1"
+
